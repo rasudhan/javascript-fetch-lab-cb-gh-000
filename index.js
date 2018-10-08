@@ -55,7 +55,8 @@ function createIssue() {
  }).then(resp => getIssues())
 }
 
-function showResults(json) {
+function showResults(repo) {
+    $('#results').append(repo.template())
 }
 
 function forkRepo() {
