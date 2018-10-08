@@ -24,14 +24,35 @@ Repo.prototype.template = function(){
   return template;
 };
 
-function getIssues() {
+//Fetch all issues through the Github API and display / append to the DOM
 
+function getIssues(data) {
+  fetch(`${baseApi}repos/${fork}/issues`).
+    then(resp => {
+      resp.json().then( data => {
+        for (let i = 0; i < data.length; i++){
+          displayIssue(new Issue(data[i]));
+        }
+      } )
+    })
 }
 
-function showIssues(json) {
+function displayIssue(issue) {
+  $('#issues').append(issue.template())
 }
+
 
 function createIssue() {
+  const issueTitle = document.getElementById('title').value
+ const issueBody = document.getElementById('body').value
+ const postData = { title: issueTitle, body: issueBody }
+ fetch(`${baseApi}repos/${fork}/issues`, {
+   method: 'post',
+   headers: {
+     'Authorization': `token ${getToken()}`
+   },
+   body: JSON.stringify(postData)
+ }).then(resp => getIssues())
 }
 
 function showResults(json) {
